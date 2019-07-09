@@ -6,6 +6,10 @@
  * @flow
  */
 
+import "./shim";
+const bitcoin = require("rn-bitcoinjs-lib");
+const terra = require('@terra-money/core');
+
 import React, {Fragment} from 'react';
 import {
   SafeAreaView,
@@ -25,6 +29,17 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
+  const keyPair = bitcoin.ECPair.makeRandom();
+  const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
+
+  const mnemonic = terra.generateMnemonic();
+
+  terra.deriveMasterKey(mnemonic)
+    .then(masterKey => {
+      const keypair = terra.deriveKeypair(masterKey);
+      const accAddr = terra.getAccAddress(keypair.publicKey);
+      console.log(accAddr);
+    });
   return (
     <Fragment>
       <StatusBar barStyle="dark-content" />
@@ -38,7 +53,7 @@ const App = () => {
               <Text style={styles.sectionTitle}>Step One</Text>
               <Text style={styles.sectionDescription}>
                 Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
+                screen and then come back to see your edits, Address {address}.
               </Text>
             </View>
             <View style={styles.sectionContainer}>
