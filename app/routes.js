@@ -1,5 +1,9 @@
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { createStackNavigator, createSwitchNavigator, createAppContainer } from 'react-navigation';
+import {
+  createStackNavigator,
+  createSwitchNavigator,
+  createAppContainer,
+} from 'react-navigation';
 import NavTransitioner from './lib/helpers/NavTransitioner';
 import SplashContainer from './modules/auth/containers/SplashContainer';
 import VerifyOtpContainer from './modules/auth/containers/VerifyOtpContainer';

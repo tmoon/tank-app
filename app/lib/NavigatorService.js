@@ -18,7 +18,7 @@ function reset(routeName, params = null) {
           params,
         }),
       ],
-    })
+    }),
   );
 }
 
@@ -27,7 +27,7 @@ function replace(routeName, params = null) {
     StackActions.replace({
       routeName,
       params,
-    })
+    }),
   );
 }
 
@@ -37,7 +37,7 @@ function navigate(routeName, params = null, key) {
       routeName,
       params,
       key,
-    })
+    }),
   );
 }
 

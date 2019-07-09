@@ -7,7 +7,7 @@ const fonts = {
   en: RobotoFont,
 };
 
-const getFont = weight => fonts.en[weight];
+const getFont = (weight) => fonts.en[weight];
 
 const H1 = ({ children, style, ...restProps }) => (
   <Text style={[$$.h1, getFont('light'), style]} {...restProps}>
