@@ -1,112 +1,55 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React from 'react';
+import { View } from 'react-native';
+import { Provider } from 'react-redux';
+import EStyleSheet from './app/config/styles/EStyleSheet';
+import store from './app/store';
+import Root from './app/routes';
+import NavigatorService from './app/lib/NavigatorService';
 
-import "./shim";
-const bitcoin = require("rn-bitcoinjs-lib");
-const terra = require('@terra-money/core');
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-import React, {Fragment} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+  getActiveRouteName = (navigationState) => {
+    if (!navigationState) {
+      return null;
+    }
+    const route = navigationState.routes[navigationState.index];
+    // Dive into nested navigators
+    if (route.routes) {
+      return this.getActiveRouteName(route);
+    }
+    return route.routeName;
+  };
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  render() {
+    return (
+      <Provider store={store}>
+        <View style={{ flex: 1 }}>
+          <Root
+            onNavigationStateChange={async (prevState, currentState) => {
+              const currentScreen = this.getActiveRouteName(currentState);
+              const previousScreen = this.getActiveRouteName(prevState);
 
-const App = () => {
-  const keyPair = bitcoin.ECPair.makeRandom();
-  const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-
-  const mnemonic = terra.generateMnemonic();
-
-  terra.deriveMasterKey(mnemonic)
-    .then(masterKey => {
-      const keypair = terra.deriveKeypair(masterKey);
-      const accAddr = terra.getAccAddress(keypair.publicKey);
-      console.log(accAddr);
-    });
-  return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits, Address {address}.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
-  );
-};
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-export default App;
+              if (previousScreen !== currentScreen && prevState.isTransitioning === false) {
+                const route = {
+                  previous_screen: previousScreen,
+                  current_screen: currentScreen,
+                };
+                await store.dispatch({
+                  type: 'TRACK_SCREEN',
+                  payload: route,
+                });
+              }
+            }}
+            ref={(navigatorRef) => {
+              NavigatorService.setContainer(navigatorRef);
+            }}
+          />
+        </View>
+      </Provider>
+    );
+  }
+}

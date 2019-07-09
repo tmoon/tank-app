@@ -30,6 +30,10 @@ target 'tankApp' do
 
   pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
 
+  pod 'RNSnackbar', :path => '../node_modules/react-native-snackbar'
+
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'tankAppTests' do
     inherit! :search_paths
     # Pods for testing
