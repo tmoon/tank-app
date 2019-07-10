@@ -66,7 +66,7 @@ async function recover_user(mnemonic, pin) {
 async function encrypt_and_save(keypair, pin) {
     try {
             pin_hash = sha256.sha256(pin);
-            publicKey = encryption_helpers.encrypt(keypair.publicKey.toString('hex'), pin);
+            publicKey = keypair.publicKey.toString('hex');
             privateKey = encryption_helpers.encrypt(keypair.privateKey.toString('hex'), pin);
             
             await AsyncStorage.setItem("pin_hash", pin_hash);
