@@ -16,7 +16,7 @@ async function create_new_user(pin) {
     const masterKey = await terra.deriveMasterKey(mnemonic)
     const keypair = terra.deriveKeypair(masterKey)
     const accAddr = terra.getAccAddress(keypair.publicKey)
-    
+    console.log(keypair);
     if(await encrypt_and_save(keypair, pin) == false) {
         return {
             error : true,
@@ -67,13 +67,11 @@ async function encrypt_and_save(keypair, pin) {
     try {
             pin_hash = sha256.sha256(pin);
             publicKey = keypair.publicKey.toString('hex');
-            privateKey = encryption_helpers.encrypt(keypair.privateKey.toString('hex'), pin);
+            privateKey = encryption_helpers.encrypt(pin, keypair.privateKey.toString('hex'));
             
             await AsyncStorage.setItem("pin_hash", pin_hash);
             await AsyncStorage.setItem("publicKey", publicKey);
             await AsyncStorage.setItem("privateKey", privateKey);
-
-            // console.log(await AsyncStorage.getItem("pin_hash"), await AsyncStorage.getItem("publicKey"), await AsyncStorage.getItem("privateKey"));
 
     } catch (error) {
         return false;
@@ -94,3 +92,4 @@ module.exports = {
     create_new_user,
     recover_user
 };
+

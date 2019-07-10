@@ -38,7 +38,7 @@ function decrypt_with_pin(pin, string) {
 
     const decryptor = require('simple-encryptor')(pin);
     let decrypted_string = decryptor.decrypt(string);
-
+    
     return decrypted_string
 }
 
@@ -46,4 +46,3 @@ module.exports = {
     encrypt : encrypt_with_pin,
     decrypt : decrypt_with_pin
 };
-
