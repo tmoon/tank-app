@@ -164,9 +164,11 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-gesture-handler')
+    implementation project(':react-native-randombytes')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     // JSC from node_modules
     if (useIntlJsc) {
         implementation 'org.webkit:android-jsc-intl:+'
