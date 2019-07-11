@@ -30,6 +30,9 @@ import Account from './app/modules/components/Account';
 import Account2 from './app/modules/components/Account2';
 import Account3 from './app/modules/components/Account3';
 import Account4 from './app/modules/components/Account4';
+import RecoverWallet from './app/modules/components/RecoverWallet';
+import RecoverMsg from './app/modules/components/RecoverMsg';
+
 
 const App = () => {
   return (
@@ -39,8 +42,10 @@ const App = () => {
             {/* <SignUp/> */}
             {/* <Launch/> */}
             {/* <Account/> */}
-            <Account3/>
+            {/* <Account3/> */}
             {/* <Account4/> */}
+            {/* <RecoverWallet/> */}
+            <RecoverMsg/>
         </ScrollView>
   );
 };

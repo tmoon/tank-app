@@ -3,25 +3,31 @@ import {
   ScrollView,
   View,
   Text,
-  Button
+  Button,
+  TextInput
 } from 'react-native';
 
-export default class SignUp extends Component {
+export default class RecoverWallet extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      text: ''
+    }
+  }
+
   render () {
     return (
-      <View style={{ flex: 1,  marginTop: 10, marginBottom: 500 }}>
-        <View style={{ flex: 1, marginLeft: 20, justifyContent: "flex-start" }}>
-          <Text style={{fontSize: 30, fontWeight: "700"}}>Type your passcode again</Text>
-          <Text style={{fontSize: 30, fontWeight: "700", marginTop: 30}}>Now get ready to write down seed phrase</Text>
-          <Text style={{ fontSize: 20, marginTop: 50 }}>
-            If you lose this device or forgot the passcode, seed phrase is the ONLY way to recover your account.
-          </Text>
-        </View>
-        <View style={{ marginTop: 70, flex: 1, justifyContent: "center", alignItems: 'center' }}>
-          <Button
-            title="Continue"
-          />
-        </View>
+      <View style={{ marginLeft: 20, marginTop: 10 }}>
+        <Text style={{fontSize: 30, fontWeight: 700}}>Enter your seed phrase to recover</Text>
+
+        <TextInput
+          style={{height: 50, borderColor: 'gray', borderWidth: 1, marginRight: '5%'}}
+          onChangeText={(text) => this.setState({text})}
+          value={this.state.text}
+          numberOfLines={10}
+          multiline={true}
+          marginTop="10%"
+      />
       </View>
     )
   }

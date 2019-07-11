@@ -6,12 +6,12 @@ import {
   Button
 } from 'react-native';
 
-export default class Account extends Component {
+export default class RecoverMsg extends Component {
   render () {
     return (
       <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "flex-start", marginLeft: 20, marginTop: 10 }}>
-        <Text style={{fontSize: 30, fontWeight: 700}}>Set your passcode</Text>
-        <Text style={{fontSize: 20, marginTop: 50}}>Pick 6 digit numbers to unlock and confirm transactions.</Text>
+        <Text style={{fontSize: 30, fontWeight: 700, marginBottom: 20}}>Account Restored {"\n"}</Text>
+      <Text style={{fontSize: 30, fontWeight: 700}}>Let's dive into {"\n"}Terra Bank</Text>
       </View>
     )
   }
