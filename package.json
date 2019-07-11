@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
     "@babel/runtime": "^7.3.1",
     "@react-native-community/eslint-config": "^0.0.3",
     "babel-jest": "^24.1.0",
@@ -34,7 +35,17 @@
     "rn-nodeify": "^10.0.1"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "setupFiles": ["./__mock__/native-bridges.js"],
+    "globals": {
+      "__DEV__": true
+    },
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-navigation)/"
+    ]
   },
   "react-native": {
     "crypto": "react-native-crypto",
