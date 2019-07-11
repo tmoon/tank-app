@@ -25,6 +25,7 @@ async function swapRate(baseDenom, askDenom, amount) {
     return data;
 }
 
+// NOTE: All variable must be string except amount
 async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
     let keyPair = await retriver.getKeyPair(pin);
     let accAddress = terra.getAccAddress(keyPair.publicKey);
@@ -49,7 +50,7 @@ async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
     let gas = Math.ceil(1.5*costCalculator.getGas(demo_msg, 1));
     let account_balance = retriver.getAmount(account_info.currency_list, askDenom);
 
-    if(amount+costCalculator.getGasCost(gas) > account_balance) {
+    if(amount+costCalculator.getGasCost(gas) > parseInt(account_balance)) {
         return {
             error: true,
             message: 'Insufficient account balance'
@@ -58,11 +59,15 @@ async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
 
     let msg = buildSwapBody(baseDenom, askDenom, memo, amount, gas, account_info.sequence, account_info.account_number, accAddress, keyPair);
 
+    return broadcastToChain(msg);
+}
+
+function broadcastToChain(msg) {
     try {
         let url = config.TERRA_ADDRESS + `/txs`;
         let req_res = await fetch(url, {
             method: 'POST', // or 'PUT'
-            body: msg, // data can be `string` or {object}!
+            body: msg, // msg can be `string` or {object}!
             headers:{
               'Content-Type': 'application/json'
             }
@@ -71,7 +76,8 @@ async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
 
         if(res_json.hasOwnProperty('hash') && typeof res_json.hash == 'string' && res_json.hash.length > 0) {
             return {
-                success: true
+                success: true,
+                hash: res_json.hash
             };
         }
     } catch (error) {
