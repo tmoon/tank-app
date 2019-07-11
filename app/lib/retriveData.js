@@ -39,3 +39,7 @@ async function getKeyPair(pin) {
         }
     }
 }
+
+module.exports = {
+    getKeyPair
+}
