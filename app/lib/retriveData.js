@@ -1,6 +1,8 @@
 const AsyncStorage = require("react-native").AsyncStorage;
 const cryptoMachine = require('./pinCryptoHelpers');
 const sha256 = require('js-sha256');
+const fetch = require('node-fetch');
+const config = require('../config/env')
 
 async function getKeyPair(pin) {
     try {
@@ -30,6 +32,13 @@ async function getKeyPair(pin) {
             privateKey: Buffer.from(storaged_privateKey, 'hex')
         }
 
+        if(keyPair.publicKey == undefined || keyPair.privateKey == undefined) {
+            return {
+                error: true,
+                message: 'Keypair retriving error'
+            }
+        }
+
         return keyPair;
 
     } catch (error) {
@@ -40,6 +49,35 @@ async function getKeyPair(pin) {
     }
 }
 
-module.exports = {
-    getKeyPair
+async function getAccountInfo(accountAdd) {
+    try {
+        let account_number = await AsyncStorage.getItem('account_number');
+        let sequence = await AsyncStorage.getItem('sequence');
+
+        if(account_number == undefined || sequence == undefined) {
+            let URL = config.TERRA_ADDRESS + `/auth/accounts/${accountAdd}`
+            let req = await fetch(URL);
+            let data = await req.json();
+
+            account_number = data.value.account_number;
+            sequence = data.value.sequence;
+
+            await AsyncStorage.setItem('account_number', account_number);
+            await AsyncStorage.setItem('sequence', sequence);
+        }
+
+        return {account_number, sequence};
+    } catch (error) {
+        return {
+            error: true,
+            message: error
+        }
+    }
 }
+
+module.exports = {
+    getKeyPair,
+    getAccountInfo
+}
+
+// getAccountInfo('terra1qq7s0ntskug8vv9q5ywsdlh9pw8nrltl93x6fm').then(res => console.log(res)).catch();
