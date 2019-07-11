@@ -7,7 +7,7 @@ async function print_stuff() {
     const keypair = terra.deriveKeypair(masterKey)
     const accAddr = terra.getAccAddress(keypair.publicKey)
 
-    console.log(mnemonic, masterKey, keypair, accAddr)
+    console.log(accAddr)
 }
 
 print_stuff()
