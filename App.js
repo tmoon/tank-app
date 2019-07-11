@@ -25,13 +25,22 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import SignUp from './app/modules/auth/SignUp';
+import Launch from './app/modules/components/Launch';
+import Account from './app/modules/components/Account';
+import Account2 from './app/modules/components/Account2';
+import Account3 from './app/modules/components/Account3';
+import Account4 from './app/modules/components/Account4';
 
 const App = () => {
   return (
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-            <SignUp/>
+            {/* <SignUp/> */}
+            {/* <Launch/> */}
+            {/* <Account/> */}
+            <Account3/>
+            {/* <Account4/> */}
         </ScrollView>
   );
 };
