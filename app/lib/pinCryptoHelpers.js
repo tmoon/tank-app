@@ -16,6 +16,10 @@ function encrypt_with_pin(pin, string) {
         throw "Message for encryption must be a string";
     }
 
+    if(pin.length == 0) {
+        throw "Pin length must be at least 1"
+    }
+
     pin = fix_pin(pin);
 
     const encryptor = require('simple-encryptor')(pin);
@@ -32,6 +36,10 @@ function decrypt_with_pin(pin, string) {
 
     if(typeof string !== "string") {
         throw "Message for decryption must be a string";
+    }
+
+    if(pin.length == 0) {
+        throw "Pin length must be at least 1"
     }
 
     pin = fix_pin(pin);

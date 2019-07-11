@@ -1,7 +1,8 @@
+import AsyncStorage from '@react-native-community/async-storage';
 const terra = require('@terra-money/core');
 const encryption_helpers = require('./pinCryptoHelpers');
 const sha256 = require('js-sha256');
-const AsyncStorage = require("react-native").AsyncStorage;
+
 
 // NOTE: pin must be string
 async function create_new_user(pin) {
@@ -16,7 +17,7 @@ async function create_new_user(pin) {
     const masterKey = await terra.deriveMasterKey(mnemonic)
     const keypair = terra.deriveKeypair(masterKey)
     const accAddr = terra.getAccAddress(keypair.publicKey)
-    console.log(keypair);
+
     if(await encrypt_and_save(keypair, pin) == false) {
         return {
             error : true,
@@ -80,6 +81,14 @@ async function encrypt_and_save(keypair, pin) {
     return true;
 }
 
+async function storageTest(key, value) {
+    let a = await AsyncStorage.setItem(key, value);
+    console.log(a);
+    let b;
+    console.log(b = await AsyncStorage.getItem(key));
+    return b;
+}
+
 function is_valid(string) {
     if(typeof string !== 'string' || string.length < 1) {
         return false;
@@ -90,6 +99,7 @@ function is_valid(string) {
 
 module.exports = {
     create_new_user,
-    recover_user
+    recover_user,
+    storageTest
 };
 

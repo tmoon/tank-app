@@ -7,8 +7,7 @@
  */
 
 import "./shim";
-const bitcoin = require("rn-bitcoinjs-lib");
-const terra = require('@terra-money/core');
+// const bitcoin = require("rn-bitcoinjs-lib");
 
 import React, {Fragment} from 'react';
 import {
@@ -29,17 +28,9 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
-  const keyPair = bitcoin.ECPair.makeRandom();
-  const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
-
-  const mnemonic = terra.generateMnemonic();
-
-  terra.deriveMasterKey(mnemonic)
-    .then(masterKey => {
-      const keypair = terra.deriveKeypair(masterKey);
-      const accAddr = terra.getAccAddress(keypair.publicKey);
-      console.log(accAddr);
-    });
+  const address = 123;
+  // const keyPair = bitcoin.ECPair.makeRandom();
+  // const { address } = bitcoin.payments.p2pkh({ pubkey: keyPair.publicKey });
   return (
     <Fragment>
       <StatusBar barStyle="dark-content" />

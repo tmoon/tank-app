@@ -30,6 +30,8 @@ target 'tankApp' do
 
   pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
   target 'tankAppTests' do
     inherit! :search_paths
     # Pods for testing

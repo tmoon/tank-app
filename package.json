@@ -8,6 +8,7 @@
     "postinstall": "rn-nodeify --install buffer,stream,assert,events,crypto,vm --hack && cd node_modules/bs58 && npm install base-x@3.0.4 && cd ../../"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.5.1",
     "@terra-money/core": "^1.0.6",
     "assert": "^1.5.0",
     "buffer": "5",
@@ -15,6 +16,7 @@
     "crypto": "^1.0.1",
     "events": "^1.1.1",
     "js-sha256": "^0.9.0",
+    "mock-async-storage": "^2.2.0",
     "node-fetch": "^2.6.0",
     "react": "16.8.6",
     "react-native": "0.60.0",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
     "@babel/runtime": "^7.3.1",
     "@react-native-community/eslint-config": "^0.0.3",
     "babel-jest": "^24.1.0",
@@ -37,7 +40,20 @@
     "rn-nodeify": "^10.0.1"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "setupFiles": [
+      "./__mock__/native-bridges.js",
+      "./__mock__/setupAsyncStorage.js"
+    ],
+    "globals": {
+      "__DEV__": true
+    },
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|react-navigation)/"
+    ]
   },
   "react-native": {
     "crypto": "react-native-crypto",
