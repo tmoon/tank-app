@@ -53,6 +53,7 @@ async function getAccountInfo(accountAdd) {
     try {
         let account_number = await AsyncStorage.getItem('account_number');
         let sequence = await AsyncStorage.getItem('sequence');
+        let currency_list;
 
         if(account_number == undefined || sequence == undefined) {
             let URL = config.TERRA_ADDRESS + `/auth/accounts/${accountAdd}`
@@ -61,12 +62,13 @@ async function getAccountInfo(accountAdd) {
 
             account_number = data.value.account_number;
             sequence = data.value.sequence;
+            currency_list = data.value.coins;
 
             await AsyncStorage.setItem('account_number', account_number);
             await AsyncStorage.setItem('sequence', sequence);
         }
 
-        return {account_number, sequence};
+        return {account_number, sequence, currency_list};
     } catch (error) {
         return {
             error: true,
@@ -75,9 +77,19 @@ async function getAccountInfo(accountAdd) {
     }
 }
 
-module.exports = {
-    getKeyPair,
-    getAccountInfo
+function getAmount(currency_list, denom) {
+    currency_list.forEach(function(element) {
+        if(element.denom == denom) {
+            return element.amount;
+        }
+      });
+
+      return undefined;
 }
 
-// getAccountInfo('terra1qq7s0ntskug8vv9q5ywsdlh9pw8nrltl93x6fm').then(res => console.log(res)).catch();
+module.exports = {
+    getKeyPair,
+    getAccountInfo,
+    getAmount
+}
+

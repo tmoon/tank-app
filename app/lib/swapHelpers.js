@@ -47,14 +47,49 @@ async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
 
     let demo_msg = buildSwapBody(baseDenom, askDenom, memo, amount, 20000000, account_info.sequence, account_info.account_number, accAddress, keyPair);
     let gas = Math.ceil(1.5*costCalculator.getGas(demo_msg, 1));
+    let account_balance = retriver.getAmount(account_info.currency_list, askDenom);
+
+    if(amount+costCalculator.getGasCost(gas) > account_balance) {
+        return {
+            error: true,
+            message: 'Insufficient account balance'
+        }
+    }
+
     let msg = buildSwapBody(baseDenom, askDenom, memo, amount, gas, account_info.sequence, account_info.account_number, accAddress, keyPair);
 
+    try {
+        let url = config.TERRA_ADDRESS + `/txs`;
+        let req_res = await fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: msg, // data can be `string` or {object}!
+            headers:{
+              'Content-Type': 'application/json'
+            }
+          });
+        let res_json = req_res.json();
+
+        if(res_json.hasOwnProperty('hash') && typeof res_json.hash == 'string' && res_json.hash.length > 0) {
+            return {
+                success: true
+            };
+        }
+    } catch (error) {
+        return {
+            error: true,
+            message: error
+        };
+    }
+
+    return {
+        success: false
+    };
 }
 
 function buildSwapBody(baseDenom, askDenom, memo, amount, gas, sequence, account_number, accAddress, keypair) {
     const msgSend = terra.buildSwap(accAddress, {
                             denom: baseDenom,
-                            amount: amount
+                            amount: toString(amount)
                         }, askDenom);
       
     const stdTx = terra.buildStdTx([msgSend], {
@@ -78,3 +113,7 @@ function buildSwapBody(baseDenom, askDenom, memo, amount, gas, sequence, account
     return broadcastBody;
 }
 
+module.exports = {
+    swapRate,
+    swapCurrency
+}
