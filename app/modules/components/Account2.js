@@ -6,7 +6,7 @@ import {
   Button
 } from 'react-native';
 
-export default class SignUp extends Component {
+export default class Account2 extends Component {
   render () {
     return (
       <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "flex-start", marginLeft: 20, marginTop: 10 }}>
