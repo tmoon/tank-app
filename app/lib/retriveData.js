@@ -1,4 +1,4 @@
-const AsyncStorage = require("react-native").AsyncStorage;
+import AsyncStorage from '@react-native-community/async-storage';
 const cryptoMachine = require('./pinCryptoHelpers');
 const sha256 = require('js-sha256');
 const fetch = require('node-fetch');
@@ -51,22 +51,17 @@ async function getKeyPair(pin) {
 
 async function getAccountInfo(accountAdd) {
     try {
-        let account_number = await AsyncStorage.getItem('account_number');
-        let sequence = await AsyncStorage.getItem('sequence');
+        let account_number;
+        let sequence;
         let currency_list;
 
-        if(account_number == undefined || sequence == undefined) {
-            let URL = config.TERRA_ADDRESS + `/auth/accounts/${accountAdd}`
-            let req = await fetch(URL);
-            let data = await req.json();
+        let URL = config.TERRA_ADDRESS + `/auth/accounts/${accountAdd}`
+        let req = await fetch(URL);
+        let data = await req.json();
 
-            account_number = data.value.account_number;
-            sequence = data.value.sequence;
-            currency_list = data.value.coins;
-
-            await AsyncStorage.setItem('account_number', account_number);
-            await AsyncStorage.setItem('sequence', sequence);
-        }
+        account_number = data.value.account_number;
+        sequence = data.value.sequence;
+        currency_list = data.value.coins;
 
         return {account_number, sequence, currency_list};
     } catch (error) {
