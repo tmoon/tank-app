@@ -58,12 +58,11 @@ async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
     }
 
     let msg = buildSwapBody(baseDenom, askDenom, memo, amount, gas, account_info.sequence, account_info.account_number, accAddress, keyPair);
-    let account_seq = parseInt(account_info.sequence) + 1;
 
-    return await broadcastToChain(msg, account_seq);
+    return await broadcastToChain(msg);
 }
 
-async function broadcastToChain(msg, account_seq) {
+async function broadcastToChain(msg) {
     try {
         // console.log("msg", msg);
  
