@@ -47,7 +47,7 @@ async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
 
     let demo_msg = buildSwapBody(baseDenom, askDenom, memo, amount, 20000000, account_info.sequence, account_info.account_number, accAddress, keyPair);
     // console.log("demo-msg", demo_msg);
-    let gas = Math.ceil(1.5*costCalculator.getGas(demo_msg, 1));
+    let gas = Math.ceil(10*costCalculator.getGas(demo_msg, 1));
     let account_balance = retriver.getAmount(account_info.currency_list, askDenom);
 
     if(amount+costCalculator.getGasCost(gas) > parseInt(account_balance)) {
@@ -57,15 +57,15 @@ async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
         }
     }
 
+    let msg = buildSwapBody(baseDenom, askDenom, memo, amount, gas, account_info.sequence, account_info.account_number, accAddress, keyPair);
     let account_seq = parseInt(account_info.sequence) + 1;
-    let msg = buildSwapBody(baseDenom, askDenom, memo, amount, gas, account_seq.toString(), account_info.account_number, accAddress, keyPair);
 
     return await broadcastToChain(msg, account_seq);
 }
 
 async function broadcastToChain(msg, account_seq) {
     try {
-        console.log("msg", msg);
+        // console.log("msg", msg);
  
         let url = config.TERRA_ADDRESS + `/txs`;
         let req_res = await fetch(url, {
@@ -77,11 +77,9 @@ async function broadcastToChain(msg, account_seq) {
           });
         let res_json = await req_res.json();
 
-        console.log("res-json", res_json);
+        // console.log("res-json", res_json);
 
         if(res_json.hasOwnProperty('hash') && typeof res_json.hash == 'string' && res_json.hash.length > 0) {
-            await AsyncStorage.setItem('sequence', account_seq.toString());
-
             return {
                 success: true,
                 hash: res_json.hash

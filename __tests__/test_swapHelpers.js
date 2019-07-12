@@ -15,7 +15,7 @@ test("test1 for swapCurrency", async() => {
     console.log("user data", accAdd);
 
     const swaper = require('../app/lib/swapHelpers');
-    let res = await swaper.swapCurrency('uluna', 'usdr', 10000, "for testing swap", "1234");
+    let res = await swaper.swapCurrency('uluna', 'ukrt', 100000000, "for testing swap", "1234");
     console.log("swap data", res);
     expect(2).toBe(2);
-});
+}, 30000);

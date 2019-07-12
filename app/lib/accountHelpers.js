@@ -82,10 +82,10 @@ async function encrypt_and_save(keypair, pin) {
 }
 
 async function storageTest(key, value) {
-    let a = await AsyncStorage.setItem(key, value);
-    console.log(a);
-    let b;
-    console.log(b = await AsyncStorage.getItem(key));
+    await AsyncStorage.setItem(key, value);
+    // console.log(a);
+    let b = await AsyncStorage.getItem(key);
+
     return b;
 }
 
