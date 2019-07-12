@@ -1,4 +1,4 @@
-const AsyncStorage = require("react-native").AsyncStorage;
+import AsyncStorage from '@react-native-community/async-storage';
 const cryptoMachine = require('./pinCryptoHelpers');
 const sha256 = require('js-sha256');
 const fetch = require('node-fetch');

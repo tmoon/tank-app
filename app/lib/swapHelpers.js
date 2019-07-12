@@ -2,9 +2,7 @@ const terra = require('@terra-money/core');
 const config = require('../config/env.json');
 const fetch = require('node-fetch');
 const costCalculator = require('./costCalculator');
-const config = require('../config/env.json');
 const retriver = require('./retriveData');
-
 
 // NOTE: amount must be in micro currency
 // Example: swapRate('uluna', 'usdr', 10000)
@@ -28,6 +26,7 @@ async function swapRate(baseDenom, askDenom, amount) {
 // NOTE: All variable must be string except amount
 async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
     let keyPair = await retriver.getKeyPair(pin);
+
     let accAddress = terra.getAccAddress(keyPair.publicKey);
 
     if(keyPair.hasOwnProperty('error')) {
@@ -38,7 +37,7 @@ async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
     }
 
     let account_info = await retriver.getAccountInfo(accAddress);
-
+    // console.log("account_info", account_info);
     if(account_info.hasOwnProperty('error')) {
         return {
             error: true,
@@ -47,6 +46,7 @@ async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
     }
 
     let demo_msg = buildSwapBody(baseDenom, askDenom, memo, amount, 20000000, account_info.sequence, account_info.account_number, accAddress, keyPair);
+    // console.log("demo-msg", demo_msg);
     let gas = Math.ceil(1.5*costCalculator.getGas(demo_msg, 1));
     let account_balance = retriver.getAmount(account_info.currency_list, askDenom);
 
@@ -57,13 +57,16 @@ async function swapCurrency(baseDenom, askDenom, amount, memo, pin) {
         }
     }
 
-    let msg = buildSwapBody(baseDenom, askDenom, memo, amount, gas, account_info.sequence, account_info.account_number, accAddress, keyPair);
+    let account_seq = parseInt(account_info.sequence) + 1;
+    let msg = buildSwapBody(baseDenom, askDenom, memo, amount, gas, account_seq.toString(), account_info.account_number, accAddress, keyPair);
 
-    return broadcastToChain(msg);
+    return await broadcastToChain(msg, account_seq);
 }
 
-function broadcastToChain(msg) {
+async function broadcastToChain(msg, account_seq) {
     try {
+        console.log("msg", msg);
+ 
         let url = config.TERRA_ADDRESS + `/txs`;
         let req_res = await fetch(url, {
             method: 'POST', // or 'PUT'
@@ -72,9 +75,13 @@ function broadcastToChain(msg) {
               'Content-Type': 'application/json'
             }
           });
-        let res_json = req_res.json();
+        let res_json = await req_res.json();
+
+        console.log("res-json", res_json);
 
         if(res_json.hasOwnProperty('hash') && typeof res_json.hash == 'string' && res_json.hash.length > 0) {
+            await AsyncStorage.setItem('sequence', account_seq.toString());
+
             return {
                 success: true,
                 hash: res_json.hash
@@ -93,16 +100,17 @@ function broadcastToChain(msg) {
 }
 
 function buildSwapBody(baseDenom, askDenom, memo, amount, gas, sequence, account_number, accAddress, keypair) {
+    // console.log(amount, gas, gas.toString());
     const msgSend = terra.buildSwap(accAddress, {
                             denom: baseDenom,
-                            amount: toString(amount)
+                            amount: amount.toString()
                         }, askDenom);
       
     const stdTx = terra.buildStdTx([msgSend], {
-    "gas": toString(gas),
+    "gas": gas.toString(),
     "amount": [
         {
-        "amount": toString(costCalculator.getGasCost(gas)),
+        "amount": costCalculator.getGasCost(gas).toString(),
         "denom": baseDenom
         }
     ]
