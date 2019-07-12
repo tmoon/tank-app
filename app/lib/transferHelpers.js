@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 const retriveData = require('./retriveData');
 const costCalculator = require('./costCalculator');
 
-function get_fee_amount(amount, currency){
+async function get_fee_amount(amount, currency){
 	let url = config.TERRA_ADDRESS + '/treasury/tax-rate';
 
 	req_res = await fetch(url);
@@ -61,7 +61,7 @@ function create_broadcastbody(fee_amount, amount, currency, accAddr, to_address,
 
 async function transfer(pin, to_address, currency, amount, memo){
 	const keypair = retriveData.getKeyPair(pin);
-	const fee_amount = get_fee_amount(Number(amount), currency);
+	const fee_amount = await get_fee_amount(Number(amount), currency);
 	const accAddr = terra.getAccAddress(keypair.publicKey);
 	const chain_id = get_chain_id();
 	const temp_var = retriveData.getAccountInfo(accAddr);
@@ -90,3 +90,9 @@ async function transfer(pin, to_address, currency, amount, memo){
 
 	return data
 }
+
+const account_helper = require('./accountHelpers');
+
+const account = account_helper.create_new_user('1234');
+
+console.log(account);
