@@ -7,10 +7,13 @@
     "test": "jest"
   },
   "dependencies": {
+    "@haskkor/react-native-pincode": "^1.21.0",
+    "@react-native-community/async-storage": "^1.5.1",
     "@terra-money/core": "^1.0.6",
     "react": "16.8.6",
     "react-native": "0.60.0",
-    "react-native-autocomplete-input": "^4.1.0"
+    "react-native-autocomplete-input": "^4.1.0",
+    "react-native-vector-icons": "^6.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",

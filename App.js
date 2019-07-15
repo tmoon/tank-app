@@ -32,7 +32,7 @@ import Account3 from './app/modules/components/Account3';
 import Account4 from './app/modules/components/Account4';
 import RecoverWallet from './app/modules/components/RecoverWallet';
 import RecoverMsg from './app/modules/components/RecoverMsg';
-
+import PINCode from '@haskkor/react-native-pincode';
 
 const App = () => {
   return (
@@ -42,10 +42,13 @@ const App = () => {
             {/* <SignUp/> */}
             {/* <Launch/> */}
             {/* <Account/> */}
+            <Account2/>
             {/* <Account3/> */}
             {/* <Account4/> */}
             {/* <RecoverWallet/> */}
-            <RecoverMsg/>
+            {/* <RecoverMsg/> */}
+            {/* <PINCode status={'choose'}/> */}
+
         </ScrollView>
   );
 };
